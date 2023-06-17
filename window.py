@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 from tkinter.filedialog import asksaveasfile
 from tkinter.filedialog import askdirectory
 import tkinter as tk
@@ -16,22 +17,22 @@ def selecionar_arquivo():
 
 def download_video():
     link = link_yt.get()
-    caminho_os = asksaveasfile(defaultextension='.mp4', filetypes=[
-                               ('MP4 files', '*.mp4')])
-    if caminho_os is not None:
-        path = os.path.dirname(caminho_os.name)
+    entry_absoluto = caminho_path.get()
+    if entry_absoluto is not None:
+        path = os.path.abspath(entry_absoluto)
+        print(path)
         yt = YouTube(link)
         ys = yt.streams.filter(
             only_audio=False, file_extension='mp4').first().download(path)
-        print("Download Completo")
+        messagebox.showinfo(title="YouTube Downloader",
+                            message="Download Finalizado!")
 
 
 def download_music():
     link = link_yt.get()
-    caminho_os = asksaveasfile(defaultextension='.mp3', filetypes=[
-                               ('MP3 files', '*.mp3')])
-    if caminho_os is not None:
-        path = os.path.dirname(caminho_os.name)
+    entry_absoluto = caminho_path.get()
+    if entry_absoluto is not None:
+        path = os.path.abspath(entry_absoluto)
         yt = YouTube(link)
         ys = yt.streams.filter(only_audio=True).first().download(path)
         for file in os.listdir(path):
@@ -42,13 +43,14 @@ def download_music():
                 new_file = mp.AudioFileClip(mp4_path)
                 new_file.write_audiofile(mp3_path)
                 os.remove(mp4_path)
-        print("Download Completo")
+        messagebox.showinfo(title="YouTube Downloader",
+                            message='Download e Conversão para MP3 Finalizado')
 
 
 window = Tk()
 window.geometry("710x404")
 window.configure(bg="#ffffff")
-window.title('YouTube Downloader')
+window.title('YouTube Downloader - V1.0')
 caminho_icone = "icons/youtube.ico"
 window.iconbitmap(caminho_icone)
 
